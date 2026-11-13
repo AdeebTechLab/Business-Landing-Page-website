@@ -2538,130 +2538,70 @@ body.dark-theme .form-success {
 
 
 /* --------------------------------------------------------------------------
-   DEDICATED FOOTER ACTION DOCK (FIXED AT BOTTOM OF PAGE, ZERO TEXT OVERLAP)
+   FOOTER BOTTOM (PERFECT HORIZONTAL ALIGNMENT ACROSS LEFT & RIGHT)
    -------------------------------------------------------------------------- */
+.footer-bottom {
+  border-top: 1px solid #1e293b;
+  padding: 1.5rem 0;
+  font-size: 0.88rem;
+  background: #04060c;
+  position: relative;
+  z-index: 10;
+}
+
 .footer-bottom-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1.25rem;
+  width: 100%;
 }
 
-.footer-action-dock {
+.copyright-text {
+  color: #94a3b8;
+  font-size: 0.88rem;
+  margin: 0;
+  text-align: left;
+}
+
+.footer-bottom-links {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 1.75rem;
+  margin: 0;
 }
 
-.dock-whatsapp-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.45rem 1rem;
-  background: #25d366;
-  color: #ffffff;
-  border-radius: var(--radius-full);
-  font-size: 0.82rem;
-  font-weight: 700;
+.footer-bottom-links a {
+  color: #94a3b8;
+  font-size: 0.88rem;
   transition: var(--transition);
 }
 
-.dock-whatsapp-btn:hover {
-  background: #1ebc59;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
-}
-
-.dock-bot-wrapper {
-  position: relative;
-}
-
-.dock-bot-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.45rem 1rem;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+.footer-bottom-links a:hover {
   color: #ffffff;
-  border-radius: var(--radius-full);
-  font-size: 0.82rem;
-  font-weight: 700;
-  transition: var(--transition);
 }
-
-.dock-bot-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-}
-
-.dock-bot-wrapper .chatterbot-drawer {
-  position: absolute;
-  bottom: 50px;
-  right: 0;
-  width: 340px;
-  max-width: 90vw;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  overflow: hidden;
-  display: none;
-  flex-direction: column;
-  z-index: 9999;
-}
-
-.dock-bot-wrapper .chatterbot-drawer.active {
-  display: flex;
-}
-
 
 /* --------------------------------------------------------------------------
-   COMPACT SIDE WIDGETS (TINY & FIT PERFECTLY ON SIDES WITHOUT BLOCKING TEXT)
+   AXON AI ASSISTANT (ELEVATED JUST ABOVE PRIVACY POLICY / TERMS TEXT)
    -------------------------------------------------------------------------- */
-.compact-side-whatsapp {
-  position: fixed;
-  bottom: 22px;
-  left: 18px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #25d366;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
-  z-index: 9999;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.compact-side-whatsapp:hover {
-  transform: scale(1.08);
-  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.55);
-  color: #ffffff;
-}
-
 .compact-side-bot {
   position: fixed;
-  bottom: 22px;
-  right: 18px;
+  bottom: 60px;
+  right: 24px;
   z-index: 9999;
 }
 
 .compact-bot-launcher {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0 0.75rem;
-  height: 40px;
+  gap: 0.4rem;
+  padding: 0 0.85rem;
+  height: 38px;
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, #2563eb, #7c3aed);
   color: #ffffff;
   font-weight: 700;
   font-size: 0.8rem;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
   cursor: pointer;
   border: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -2669,7 +2609,7 @@ body.dark-theme .form-success {
 
 .compact-bot-launcher:hover {
   transform: scale(1.06);
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.55);
 }
 
 .compact-bot-launcher i {
@@ -2678,14 +2618,14 @@ body.dark-theme .form-success {
 
 .compact-side-bot .chatterbot-drawer {
   position: absolute;
-  bottom: 50px;
+  bottom: 48px;
   right: 0;
   width: 320px;
   max-width: 88vw;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
   overflow: hidden;
   display: none;
   flex-direction: column;
