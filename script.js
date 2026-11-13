@@ -1,44 +1,36 @@
 /**
- * ApexDigital - Interactive Landing Page Logic
- * Pure ES6+ JavaScript - Zero External Framework Dependencies
+ * ADEEB TECHNOLOGY LAB - INTERACTIVE JAVASCRIPT
+ * Bahawalpur, Pakistan | WhatsApp: 0309-2333121 | info_adeebTechlab@gmail.com
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
-  /* ==========================================================================
-     1. Sticky Navbar & Scroll Background Adaptation
-     ========================================================================== */
+  /* --------------------------------------------------------------------------
+     1. STICKY NAVBAR & NAVBAR BACKGROUND ON SCROLL
+     -------------------------------------------------------------------------- */
   const header = document.getElementById('header');
   const navLinks = document.querySelectorAll('.nav-link');
-  const sections = document.querySelectorAll('section[id], header[id]');
-  const backToTopBtn = document.getElementById('back-to-top');
+  const sections = document.querySelectorAll('section[id]');
 
-  const handleScrollEffects = () => {
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+  window.addEventListener('scroll', () => {
+    const scrollY = window.pageYOffset;
 
-    // Header background change
+    // Header Background Change
     if (scrollY > 50) {
       header.classList.add('scrolled');
     } else {
       header.classList.remove('scrolled');
     }
 
-    // Back to top visibility
-    if (scrollY > 450) {
-      backToTopBtn.classList.add('show');
-    } else {
-      backToTopBtn.classList.remove('show');
-    }
-
-    // Active link highlighting on scroll
-    sections.forEach((current) => {
-      const sectionHeight = current.offsetHeight;
-      const sectionTop = current.offsetTop - 120;
-      const sectionId = current.getAttribute('id');
+    // Active Section Link Highlight
+    sections.forEach(section => {
+      const sectionHeight = section.offsetHeight;
+      const sectionTop = section.offsetTop - 120;
+      const sectionId = section.getAttribute('id');
 
       if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-        navLinks.forEach((link) => {
+        navLinks.forEach(link => {
           link.classList.remove('active');
           if (link.getAttribute('href') === `#${sectionId}`) {
             link.classList.add('active');
@@ -46,90 +38,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     });
-  };
-
-  window.addEventListener('scroll', handleScrollEffects, { passive: true });
-  handleScrollEffects(); // Run on initial load
-
-  // Back to Top action
-  backToTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
   });
 
-  /* ==========================================================================
-     2. Mobile Hamburger Drawer Menu
-     ========================================================================== */
+  /* --------------------------------------------------------------------------
+     2. MOBILE HAMBURGER MENU (OPEN / CLOSE WITH JS)
+     -------------------------------------------------------------------------- */
   const hamburgerBtn = document.getElementById('hamburger-btn');
   const navMenu = document.getElementById('nav-menu');
 
-  const toggleMobileMenu = () => {
-    const isActive = navMenu.classList.toggle('active');
-    hamburgerBtn.classList.toggle('active');
-    hamburgerBtn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
-    document.body.style.overflow = isActive ? 'hidden' : '';
-  };
-
-  const closeMobileMenu = () => {
-    navMenu.classList.remove('active');
-    hamburgerBtn.classList.remove('active');
-    hamburgerBtn.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-  };
-
-  hamburgerBtn.addEventListener('click', toggleMobileMenu);
-
-  // Close when tapping menu links
-  navLinks.forEach((link) => {
-    link.addEventListener('click', () => {
-      if (navMenu.classList.contains('active')) {
-        closeMobileMenu();
-      }
+  if (hamburgerBtn && navMenu) {
+    hamburgerBtn.addEventListener('click', () => {
+      const isExpanded = hamburgerBtn.getAttribute('aria-expanded') === 'true';
+      hamburgerBtn.classList.toggle('active');
+      navMenu.classList.toggle('open');
+      hamburgerBtn.setAttribute('aria-expanded', !isExpanded);
     });
-  });
 
-  /* ==========================================================================
-     3. Dark / Light Theme Toggle
-     ========================================================================== */
+    // Close menu when clicking any nav link
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        hamburgerBtn.classList.remove('active');
+        navMenu.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     3. DARK MODE TOGGLE (RICH NAVY-SLATE THEME WITH LOCALSTORAGE CACHE)
+     -------------------------------------------------------------------------- */
   const themeToggle = document.getElementById('theme-toggle');
+  const body = document.body;
   const themeIcon = themeToggle.querySelector('i');
 
-  // Check saved preference or OS default
-  const savedTheme = localStorage.getItem('apex_theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-  const applyTheme = (isDark) => {
-    if (isDark) {
-      document.body.classList.remove('light-theme');
-      document.body.classList.add('dark-theme');
-      themeIcon.classList.remove('fa-moon');
-      themeIcon.classList.add('fa-sun');
-    } else {
-      document.body.classList.remove('dark-theme');
-      document.body.classList.add('light-theme');
-      themeIcon.classList.remove('fa-sun');
-      themeIcon.classList.add('fa-moon');
-    }
-  };
-
-  if (savedTheme) {
-    applyTheme(savedTheme === 'dark');
-  } else if (prefersDark) {
-    applyTheme(true);
+  // Load saved theme preference
+  const savedTheme = localStorage.getItem('atl-theme');
+  if (savedTheme === 'dark') {
+    body.classList.remove('light-theme');
+    body.classList.add('dark-theme');
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
   }
 
   themeToggle.addEventListener('click', () => {
-    const isCurrentlyDark = document.body.classList.contains('dark-theme');
-    const newTheme = !isCurrentlyDark;
-    applyTheme(newTheme);
-    localStorage.setItem('apex_theme', newTheme ? 'dark' : 'light');
+    if (body.classList.contains('dark-theme')) {
+      body.classList.remove('dark-theme');
+      body.classList.add('light-theme');
+      themeIcon.classList.remove('fa-sun');
+      themeIcon.classList.add('fa-moon');
+      localStorage.setItem('atl-theme', 'light');
+    } else {
+      body.classList.remove('light-theme');
+      body.classList.add('dark-theme');
+      themeIcon.classList.remove('fa-moon');
+      themeIcon.classList.add('fa-sun');
+      localStorage.setItem('atl-theme', 'dark');
+    }
   });
 
-  /* ==========================================================================
-     4. Animated Hero Headline (Rotating Words Fade/Slide)
-     ========================================================================== */
+  /* --------------------------------------------------------------------------
+     4. HERO HEADLINE ANIMATED TEXT ROTATION
+     -------------------------------------------------------------------------- */
   const animatedWords = document.querySelectorAll('.animated-word');
   let currentWordIndex = 0;
 
@@ -141,134 +110,143 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2800);
   }
 
-  /* ==========================================================================
-     5. Scroll Reveal Animations (IntersectionObserver)
-     ========================================================================== */
+  /* --------------------------------------------------------------------------
+     5. SCROLL REVEAL OBSERVER (Smooth Entrance)
+     -------------------------------------------------------------------------- */
   const revealElements = document.querySelectorAll('.reveal-on-scroll');
 
   const revealObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
+    entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('revealed');
         observer.unobserve(entry.target);
       }
     });
   }, {
-    threshold: 0.12,
+    threshold: 0.15,
     rootMargin: '0px 0px -40px 0px'
   });
 
-  revealElements.forEach((el) => revealObserver.observe(el));
+  revealElements.forEach(el => revealObserver.observe(el));
 
-  /* ==========================================================================
-     6. Stats Number Counters (Animated Count-Up)
-     ========================================================================== */
-  const counterElements = document.querySelectorAll('.counter-number, .stat-number');
-  let countersAnimated = false;
+  /* --------------------------------------------------------------------------
+     6. ANIMATED STATS COUNTERS (Count Up From 0 to Target When Visible)
+     -------------------------------------------------------------------------- */
+  const statsCounters = document.querySelectorAll('.counter-number');
+  let counted = false;
 
-  const animateCounters = () => {
-    counterElements.forEach((counter) => {
-      const target = +counter.getAttribute('data-target');
-      const duration = 1800; // ms
-      const startTime = performance.now();
+  const countUpObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !counted) {
+        counted = true;
+        statsCounters.forEach(counter => {
+          const target = +counter.getAttribute('data-target');
+          const duration = 2000; // 2 seconds
+          const frameDuration = 1000 / 60;
+          const totalFrames = Math.round(duration / frameDuration);
+          let frame = 0;
 
-      const updateCount = (currentTime) => {
-        const elapsedTime = currentTime - startTime;
-        const progress = Math.min(elapsedTime / duration, 1);
-        // Ease out quadratic function for smooth slowdown
-        const easeOutQuad = 1 - (1 - progress) * (1 - progress);
-        const currentVal = Math.floor(easeOutQuad * target);
+          const counterTimer = setInterval(() => {
+            frame++;
+            const progress = frame / totalFrames;
+            // Ease out quart
+            const currentCount = Math.round(target * (1 - Math.pow(1 - progress, 4)));
 
-        counter.textContent = currentVal;
+            counter.innerText = currentCount;
 
-        if (progress < 1) {
-          requestAnimationFrame(updateCount);
-        } else {
-          counter.textContent = target;
-        }
-      };
-
-      requestAnimationFrame(updateCount);
+            if (frame === totalFrames) {
+              counter.innerText = target;
+              clearInterval(counterTimer);
+            }
+          }, frameDuration);
+        });
+        observer.disconnect();
+      }
     });
-  };
+  }, { threshold: 0.25 });
 
   const statsSection = document.getElementById('stats-counter-section');
   if (statsSection) {
-    const statsObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && !countersAnimated) {
-          countersAnimated = true;
-          animateCounters();
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.25 });
-
-    statsObserver.observe(statsSection);
+    countUpObserver.observe(statsSection);
   }
 
-  /* ==========================================================================
-     7. Services Category Filtering
-     ========================================================================== */
+  /* --------------------------------------------------------------------------
+     7. SERVICES FILTERING
+     -------------------------------------------------------------------------- */
   const serviceFilterBtns = document.querySelectorAll('#services-filter .filter-btn');
-  const serviceCards = document.querySelectorAll('.services-grid .service-card');
+  const serviceCards = document.querySelectorAll('.service-card');
 
-  serviceFilterBtns.forEach((btn) => {
+  serviceFilterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      serviceFilterBtns.forEach((b) => b.classList.remove('active'));
+      serviceFilterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      const filterVal = btn.getAttribute('data-filter');
+      const filterValue = btn.getAttribute('data-filter');
 
-      serviceCards.forEach((card) => {
+      serviceCards.forEach(card => {
         const category = card.getAttribute('data-category');
-        if (filterVal === 'all' || category === filterVal) {
-          card.classList.remove('hide');
+        if (filterValue === 'all' || category === filterValue) {
+          card.style.display = 'flex';
+          setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          }, 50);
         } else {
-          card.classList.add('hide');
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            card.style.display = 'none';
+          }, 200);
         }
       });
     });
   });
 
-  /* ==========================================================================
-     8. Portfolio Gallery Filtering & Lightbox Modal
-     ========================================================================== */
+  /* --------------------------------------------------------------------------
+     8. PORTFOLIO FILTERING & LIGHTBOX
+     -------------------------------------------------------------------------- */
   const portfolioFilterBtns = document.querySelectorAll('#portfolio-filter .filter-btn');
-  const portfolioCards = document.querySelectorAll('.portfolio-grid .portfolio-card');
+  const portfolioCards = document.querySelectorAll('.portfolio-card');
 
-  portfolioFilterBtns.forEach((btn) => {
+  portfolioFilterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      portfolioFilterBtns.forEach((b) => b.classList.remove('active'));
+      portfolioFilterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      const filterVal = btn.getAttribute('data-filter');
+      const filterValue = btn.getAttribute('data-filter');
 
-      portfolioCards.forEach((card) => {
+      portfolioCards.forEach(card => {
         const category = card.getAttribute('data-category');
-        if (filterVal === 'all' || category === filterVal) {
-          card.classList.remove('hide');
+        if (filterValue === 'all' || category === filterValue) {
+          card.style.display = 'block';
+          setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'scale(1)';
+          }, 50);
         } else {
-          card.classList.add('hide');
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            card.style.display = 'none';
+          }, 200);
         }
       });
     });
   });
 
-  // Lightbox Modal Logic
+  // Lightbox Modal
   const lightboxModal = document.getElementById('lightbox-modal');
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxTitle = document.getElementById('lightbox-title');
   const lightboxTag = document.getElementById('lightbox-tag');
   const lightboxClose = document.getElementById('lightbox-close');
   const lightboxBackdrop = document.getElementById('lightbox-backdrop');
-  const triggerBtns = document.querySelectorAll('.lightbox-trigger-btn');
+  const lightboxTriggers = document.querySelectorAll('.lightbox-trigger-btn');
 
   const openLightbox = (src, title, category) => {
     lightboxImg.src = src;
-    lightboxImg.alt = title;
-    lightboxTitle.textContent = title;
-    lightboxTag.textContent = category;
+    lightboxTitle.innerText = title;
+    lightboxTag.innerText = category;
     lightboxModal.classList.add('active');
     lightboxModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -277,15 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeLightbox = () => {
     lightboxModal.classList.remove('active');
     lightboxModal.setAttribute('aria-hidden', 'true');
+    lightboxImg.src = '';
     document.body.style.overflow = '';
-    setTimeout(() => {
-      lightboxImg.src = '';
-    }, 250);
   };
 
-  triggerBtns.forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
+  lightboxTriggers.forEach(btn => {
+    btn.addEventListener('click', () => {
       const src = btn.getAttribute('data-src');
       const title = btn.getAttribute('data-title');
       const category = btn.getAttribute('data-category');
@@ -293,135 +268,79 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  lightboxClose.addEventListener('click', closeLightbox);
-  lightboxBackdrop.addEventListener('click', closeLightbox);
-
+  if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && lightboxModal.classList.contains('active')) {
       closeLightbox();
     }
   });
 
-  /* ==========================================================================
-     9. Pricing Monthly / Yearly Plan Toggle
-     ========================================================================== */
+  /* --------------------------------------------------------------------------
+     9. PRICING PLANS TOGGLE (Monthly / Yearly in PKR)
+     -------------------------------------------------------------------------- */
   const pricingToggle = document.getElementById('pricing-toggle');
-  const billingLabels = document.querySelectorAll('.billing-label');
-  const priceAmounts = document.querySelectorAll('.plan-price .amount');
-  const billedNotes = document.querySelectorAll('.billed-note');
+  const monthlyLabel = document.querySelector('.billing-label.monthly');
+  const yearlyLabel = document.querySelector('.billing-label.yearly');
+  const priceAmounts = document.querySelectorAll('.pricing-card .amount');
+  const billedNotes = document.querySelectorAll('.pricing-card .billed-note');
 
   if (pricingToggle) {
     pricingToggle.addEventListener('change', () => {
       const isYearly = pricingToggle.checked;
 
-      // Update labels highlight
-      billingLabels[0].classList.toggle('active', !isYearly);
-      billingLabels[1].classList.toggle('active', isYearly);
+      if (isYearly) {
+        monthlyLabel.classList.remove('active');
+        yearlyLabel.classList.add('active');
 
-      // Transition prices smoothly
-      priceAmounts.forEach((amt) => {
-        amt.style.transform = 'scale(0.85)';
-        setTimeout(() => {
-          amt.textContent = isYearly ? amt.getAttribute('data-yearly') : amt.getAttribute('data-monthly');
-          amt.style.transform = 'scale(1)';
-        }, 120);
-      });
+        priceAmounts.forEach(amt => {
+          amt.innerText = amt.getAttribute('data-yearly');
+        });
 
-      // Update billed notes
-      billedNotes.forEach((note) => {
-        note.textContent = isYearly ? note.getAttribute('data-yearly') : note.getAttribute('data-monthly');
-      });
+        billedNotes.forEach(note => {
+          note.innerText = note.getAttribute('data-yearly');
+        });
+      } else {
+        yearlyLabel.classList.remove('active');
+        monthlyLabel.classList.add('active');
+
+        priceAmounts.forEach(amt => {
+          amt.innerText = amt.getAttribute('data-monthly');
+        });
+
+        billedNotes.forEach(note => {
+          note.innerText = note.getAttribute('data-monthly');
+        });
+      }
     });
   }
 
-  /* ==========================================================================
-     10. Testimonials Carousel / Slider (5-Second Auto-play)
-     ========================================================================== */
-  const slides = document.querySelectorAll('.testimonial-slide');
-  const dots = document.querySelectorAll('.carousel-dots .dot');
-  const prevBtn = document.getElementById('prev-testimonial');
-  const nextBtn = document.getElementById('next-testimonial');
-  let currentSlide = 0;
-  let autoplayTimer = null;
-
-  const showSlide = (index) => {
-    slides.forEach((slide) => slide.classList.remove('active'));
-    dots.forEach((dot) => dot.classList.remove('active'));
-
-    currentSlide = (index + slides.length) % slides.length;
-    slides[currentSlide].classList.add('active');
-    dots[currentSlide].classList.add('active');
-  };
-
-  const nextSlide = () => showSlide(currentSlide + 1);
-  const prevSlide = () => showSlide(currentSlide - 1);
-
-  const startAutoplay = () => {
-    stopAutoplay();
-    autoplayTimer = setInterval(nextSlide, 5000);
-  };
-
-  const stopAutoplay = () => {
-    if (autoplayTimer) {
-      clearInterval(autoplayTimer);
-    }
-  };
-
-  if (prevBtn && nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      nextSlide();
-      startAutoplay(); // Reset timer after manual click
-    });
-
-    prevBtn.addEventListener('click', () => {
-      prevSlide();
-      startAutoplay();
-    });
-
-    dots.forEach((dot) => {
-      dot.addEventListener('click', () => {
-        const slideIdx = parseInt(dot.getAttribute('data-index'), 10);
-        showSlide(slideIdx);
-        startAutoplay();
-      });
-    });
-
-    // Pause on hover
-    const carouselWrapper = document.querySelector('.testimonial-carousel-wrapper');
-    if (carouselWrapper) {
-      carouselWrapper.addEventListener('mouseenter', stopAutoplay);
-      carouselWrapper.addEventListener('mouseleave', startAutoplay);
-    }
-
-    startAutoplay();
-  }
-
-  /* ==========================================================================
-     11. FAQ Accordion (Single Active Expanded)
-     ========================================================================== */
+  /* --------------------------------------------------------------------------
+     10. FAQ ACCORDION (One Open at a Time)
+     -------------------------------------------------------------------------- */
   const faqItems = document.querySelectorAll('.faq-item');
 
-  faqItems.forEach((item) => {
+  faqItems.forEach(item => {
     const questionBtn = item.querySelector('.faq-question');
     const answer = item.querySelector('.faq-answer');
 
-    // Set initial maxHeight for pre-opened item
+    // Set initial maxHeight for active item
     if (item.classList.contains('active')) {
       answer.style.maxHeight = answer.scrollHeight + 'px';
     }
 
     questionBtn.addEventListener('click', () => {
-      const isAlreadyActive = item.classList.contains('active');
+      const isOpen = item.classList.contains('active');
 
-      // Close all accordion items
-      faqItems.forEach((other) => {
-        other.classList.remove('active');
-        other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
-        other.querySelector('.faq-answer').style.maxHeight = null;
+      // Close all other items
+      faqItems.forEach(otherItem => {
+        otherItem.classList.remove('active');
+        otherItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+        otherItem.querySelector('.faq-answer').style.maxHeight = null;
       });
 
-      // Toggle clicked item
-      if (!isAlreadyActive) {
+      // Toggle current item
+      if (!isOpen) {
         item.classList.add('active');
         questionBtn.setAttribute('aria-expanded', 'true');
         answer.style.maxHeight = answer.scrollHeight + 'px';
@@ -429,9 +348,55 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ==========================================================================
-     12. Contact Form Full Validation & Feedback
-     ========================================================================== */
+  /* --------------------------------------------------------------------------
+     11. TESTIMONIALS SLIDER / CAROUSEL (Auto-play 5s + Prev/Next + Dots)
+     -------------------------------------------------------------------------- */
+  const slides = document.querySelectorAll('.testimonial-slide');
+  const dots = document.querySelectorAll('.carousel-dots .dot');
+  const prevBtn = document.getElementById('prev-testimonial');
+  const nextBtn = document.getElementById('next-testimonial');
+  let currentSlide = 0;
+  let slideInterval = null;
+
+  const showSlide = (index) => {
+    slides.forEach((slide, i) => {
+      slide.classList.remove('active');
+      if (dots[i]) dots[i].classList.remove('active');
+    });
+
+    currentSlide = (index + slides.length) % slides.length;
+    slides[currentSlide].classList.add('active');
+    if (dots[currentSlide]) dots[currentSlide].classList.add('active');
+  };
+
+  const nextSlide = () => showSlide(currentSlide + 1);
+  const prevSlide = () => showSlide(currentSlide - 1);
+
+  if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetSlideTimer(); });
+  if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetSlideTimer(); });
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const index = parseInt(dot.getAttribute('data-index'), 10);
+      showSlide(index);
+      resetSlideTimer();
+    });
+  });
+
+  const startSlideTimer = () => {
+    slideInterval = setInterval(nextSlide, 5000);
+  };
+
+  const resetSlideTimer = () => {
+    clearInterval(slideInterval);
+    startSlideTimer();
+  };
+
+  startSlideTimer();
+
+  /* --------------------------------------------------------------------------
+     12. CONTACT FORM JAVASCRIPT VALIDATION & SUBMISSION
+     -------------------------------------------------------------------------- */
   const contactForm = document.getElementById('contact-form');
   const nameInput = document.getElementById('contact-name');
   const emailInput = document.getElementById('contact-email');
@@ -440,124 +405,113 @@ document.addEventListener('DOMContentLoaded', () => {
   const messageInput = document.getElementById('contact-message');
   const successAlert = document.getElementById('form-success-alert');
 
-  // Error container elements
-  const nameError = document.getElementById('name-error');
-  const emailError = document.getElementById('email-error');
-  const phoneError = document.getElementById('phone-error');
-  const subjectError = document.getElementById('subject-error');
-  const messageError = document.getElementById('message-error');
-
-  const setError = (input, errorEl, message) => {
-    const group = input.closest('.form-group');
-    group.classList.add('has-error');
-    errorEl.textContent = message;
+  const setError = (input, errorId, message) => {
+    const parentWrapper = input.closest('.input-wrapper');
+    const errorEl = document.getElementById(errorId);
+    if (parentWrapper) parentWrapper.classList.add('error');
+    if (errorEl) errorEl.innerText = message;
   };
 
-  const clearError = (input, errorEl) => {
-    const group = input.closest('.form-group');
-    group.classList.remove('has-error');
-    errorEl.textContent = '';
+  const clearError = (input, errorId) => {
+    const parentWrapper = input.closest('.input-wrapper');
+    const errorEl = document.getElementById(errorId);
+    if (parentWrapper) parentWrapper.classList.remove('error');
+    if (errorEl) errorEl.innerText = '';
   };
 
-  // Real-time input clearing
-  [
-    { input: nameInput, error: nameError },
-    { input: emailInput, error: emailError },
-    { input: phoneInput, error: phoneError },
-    { input: subjectInput, error: subjectError },
-    { input: messageInput, error: messageError }
-  ].forEach(({ input, error }) => {
-    input.addEventListener('input', () => clearError(input, error));
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  // Live input error cleanup
+  [nameInput, emailInput, phoneInput, subjectInput, messageInput].forEach(inp => {
+    if (inp) {
+      inp.addEventListener('input', () => {
+        clearError(inp, `${inp.name}-error`);
+      });
+    }
   });
 
-  // Email format regex RFC compliant
-  const isValidEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    return re.test(String(email).trim().toLowerCase());
-  };
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let isValid = true;
 
-  // Phone validation: numbers, +, dashes, min 8 digits
-  const isValidPhone = (phone) => {
-    const cleanNumber = phone.replace(/[^0-9]/g, '');
-    return cleanNumber.length >= 8;
-  };
+      // 1. Name Check
+      if (!nameInput.value.trim()) {
+        setError(nameInput, 'name-error', 'Full Name is required.');
+        isValid = false;
+      } else {
+        clearError(nameInput, 'name-error');
+      }
 
-  contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    let hasError = false;
+      // 2. Email Check
+      if (!emailInput.value.trim()) {
+        setError(emailInput, 'email-error', 'Email address is required.');
+        isValid = false;
+      } else if (!validateEmail(emailInput.value.trim())) {
+        setError(emailInput, 'email-error', 'Please enter a valid email address.');
+        isValid = false;
+      } else {
+        clearError(emailInput, 'email-error');
+      }
 
-    // 1. Name check
-    if (!nameInput.value.trim()) {
-      setError(nameInput, nameError, 'Please enter your full name.');
-      hasError = true;
-    } else if (nameInput.value.trim().length < 2) {
-      setError(nameInput, nameError, 'Name must contain at least 2 characters.');
-      hasError = true;
-    }
+      // 3. Phone Check (Minimum 10 digits for Pakistan / International)
+      const cleanPhone = phoneInput.value.replace(/[^0-9]/g, '');
+      if (!phoneInput.value.trim()) {
+        setError(phoneInput, 'phone-error', 'Phone number is required.');
+        isValid = false;
+      } else if (cleanPhone.length < 10) {
+        setError(phoneInput, 'phone-error', 'Phone number must have at least 10 digits.');
+        isValid = false;
+      } else {
+        clearError(phoneInput, 'phone-error');
+      }
 
-    // 2. Email check
-    if (!emailInput.value.trim()) {
-      setError(emailInput, emailError, 'Email address is required.');
-      hasError = true;
-    } else if (!isValidEmail(emailInput.value)) {
-      setError(emailInput, emailError, 'Please enter a valid email format (e.g. user@domain.com).');
-      hasError = true;
-    }
+      // 4. Subject Check
+      if (!subjectInput.value.trim()) {
+        setError(subjectInput, 'subject-error', 'Subject is required.');
+        isValid = false;
+      } else {
+        clearError(subjectInput, 'subject-error');
+      }
 
-    // 3. Phone check
-    if (!phoneInput.value.trim()) {
-      setError(phoneInput, phoneError, 'Phone number is required.');
-      hasError = true;
-    } else if (!isValidPhone(phoneInput.value)) {
-      setError(phoneInput, phoneError, 'Please provide a valid phone number (minimum 8 digits).');
-      hasError = true;
-    }
+      // 5. Message Check
+      if (!messageInput.value.trim()) {
+        setError(messageInput, 'message-error', 'Message cannot be empty.');
+        isValid = false;
+      } else if (messageInput.value.trim().length < 15) {
+        setError(messageInput, 'message-error', 'Please provide at least 15 characters describing your project.');
+        isValid = false;
+      } else {
+        clearError(messageInput, 'message-error');
+      }
 
-    // 4. Subject check
-    if (!subjectInput.value.trim()) {
-      setError(subjectInput, subjectError, 'Please enter a subject line.');
-      hasError = true;
-    }
+      // On Successful Validation
+      if (isValid) {
+        const submitBtn = document.getElementById('contact-submit-btn');
+        const originalContent = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending Message...';
+        submitBtn.disabled = true;
 
-    // 5. Message check
-    if (!messageInput.value.trim()) {
-      setError(messageInput, messageError, 'Please provide your message or project requirements.');
-      hasError = true;
-    } else if (messageInput.value.trim().length < 15) {
-      setError(messageInput, messageError, 'Please write at least 15 characters describing your project.');
-      hasError = true;
-    }
-
-    if (!hasError) {
-      // Simulate successful asynchronous dispatch
-      const submitBtn = document.getElementById('contact-submit-btn');
-      const originalBtnHTML = submitBtn.innerHTML;
-
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
-
-      setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnHTML;
-
-        // Show confirmation banner
-        successAlert.style.display = 'flex';
-        contactForm.reset();
-
-        // Scroll smoothly to alert
-        successAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-        // Auto-dismiss after 8 seconds
         setTimeout(() => {
-          successAlert.style.display = 'none';
-        }, 8000);
-      }, 700);
-    }
-  });
+          submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Sent Successfully!';
+          successAlert.style.display = 'flex';
+          contactForm.reset();
 
-  /* ==========================================================================
-     13. Footer Newsletter Form Validation
-     ========================================================================== */
+          setTimeout(() => {
+            submitBtn.innerHTML = originalContent;
+            submitBtn.disabled = false;
+          }, 3500);
+        }, 1200);
+      }
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     13. NEWSLETTER FORM VALIDATION
+     -------------------------------------------------------------------------- */
   const newsletterForm = document.getElementById('newsletter-form');
   const newsletterEmail = document.getElementById('newsletter-email');
   const newsletterMsg = document.getElementById('newsletter-msg');
@@ -565,35 +519,88 @@ document.addEventListener('DOMContentLoaded', () => {
   if (newsletterForm) {
     newsletterForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const emailVal = newsletterEmail.value.trim();
+      const val = newsletterEmail.value.trim();
 
-      if (!emailVal) {
+      if (!val) {
+        newsletterMsg.innerText = 'Please enter your email.';
         newsletterMsg.className = 'newsletter-msg error';
-        newsletterMsg.textContent = 'Please provide an email address.';
-        return;
-      }
-
-      if (!isValidEmail(emailVal)) {
+      } else if (!validateEmail(val)) {
+        newsletterMsg.innerText = 'Enter a valid email address.';
         newsletterMsg.className = 'newsletter-msg error';
-        newsletterMsg.textContent = 'Please enter a valid email format.';
-        return;
+      } else {
+        newsletterMsg.innerText = 'Subscribed successfully! Thank you.';
+        newsletterMsg.className = 'newsletter-msg success';
+        newsletterEmail.value = '';
+        setTimeout(() => { newsletterMsg.innerText = ''; }, 4000);
       }
-
-      newsletterMsg.className = 'newsletter-msg success';
-      newsletterMsg.textContent = 'Subscribed successfully! Welcome aboard.';
-      newsletterEmail.value = '';
-
-      setTimeout(() => {
-        newsletterMsg.textContent = '';
-      }, 5000);
     });
   }
 
-  /* ==========================================================================
-     14. Current Year Dynamic Auto-Update
-     ========================================================================== */
-  const yearElement = document.getElementById('current-year');
-  if (yearElement) {
-    yearElement.textContent = new Date().getFullYear();
+  /* --------------------------------------------------------------------------
+     14. CHATTERBOT AI ASSISTANT (DRAWER TOGGLE & INTERACTIVE RESPONSES)
+     -------------------------------------------------------------------------- */
+  const chatterbotLauncher = document.getElementById('chatterbot-launcher');
+  const chatterbotDrawer = document.getElementById('chatterbot-drawer');
+  const chatterbotClose = document.getElementById('chatterbot-close');
+  const chatterbotMessages = document.getElementById('chatterbot-messages');
+  const botChips = document.querySelectorAll('.bot-chip');
+
+  if (chatterbotLauncher && chatterbotDrawer) {
+    chatterbotLauncher.addEventListener('click', () => {
+      const isActive = chatterbotDrawer.classList.contains('active');
+      if (isActive) {
+        chatterbotDrawer.classList.remove('active');
+      } else {
+        chatterbotDrawer.classList.add('active');
+      }
+    });
+
+    if (chatterbotClose) {
+      chatterbotClose.addEventListener('click', () => {
+        chatterbotDrawer.classList.remove('active');
+      });
+    }
+
+    // Bot Quick Chips Responses
+    const botReplies = {
+      'Services': 'We specialize in UI/UX Product Design, Custom Web Applications, E-Commerce Stores, and SEO/Paid Marketing. Would you like a quote for a specific service?',
+      'Pricing': 'Our starter package begins at PKR 15,000/mo, Business Growth at PKR 35,000/mo, and Corporate Scale at PKR 75,000/mo with 20% annual discounts!',
+      'Location': 'Our office is located at Bhatta No#1 Chowk, Gulberg Road, Abbas Colony St No# 2, Bahawalpur. You are welcome to visit us!',
+      'WhatsApp': 'You can chat directly with our engineering lead on WhatsApp at 0309-2333121 (+92 309 2333121) for instantaneous project coordination.'
+    };
+
+    botChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const query = chip.getAttribute('data-query');
+        
+        // Append user selection
+        const userMsg = document.createElement('div');
+        userMsg.className = 'user-msg';
+        userMsg.style.textAlign = 'right';
+        userMsg.innerHTML = `<div class="msg-bubble" style="background:var(--primary);color:#fff;display:inline-block;margin-left:auto;">${chip.innerText}</div>`;
+        chatterbotMessages.appendChild(userMsg);
+
+        // Append bot reply
+        setTimeout(() => {
+          const botMsg = document.createElement('div');
+          botMsg.className = 'bot-msg';
+          botMsg.innerHTML = `<div class="msg-bubble">${botReplies[query] || 'Feel free to connect on WhatsApp directly at 0309-2333121!'}</div>`;
+          chatterbotMessages.appendChild(botMsg);
+          chatterbotMessages.scrollTop = chatterbotMessages.scrollHeight;
+
+          if (query === 'WhatsApp') {
+            window.open('https://wa.me/923092333121?text=Hello%20Adeeb%20Technology%20Lab!%20I%20contacted%20via%20Axon AI%20AI.', '_blank');
+          }
+        }, 400);
+
+        chatterbotMessages.scrollTop = chatterbotMessages.scrollHeight;
+      });
+    });
+  }
+
+  // Dynamic Current Year in Footer
+  const yearEl = document.getElementById('current-year');
+  if (yearEl) {
+    yearEl.innerText = new Date().getFullYear();
   }
 });
